@@ -1,0 +1,11 @@
+# npm packages and dependencies
+node_modules
+
+# Locked versions of dependencies
+package-lock.json
+
+# Environment variables
+.env
+
+# Compiled JavaScript files
+dist
