@@ -20,7 +20,7 @@ if (typeof SERVER_PORT === "undefined")
 app.use(consoleRequestLogger);
 
 app.get("/", (req: Request, res: Response) => {
-    throw new Error("heihoaeihf");
+    // throw new Error("heihoaeihf");
     return sendSuccessResponse(res, undefined, 200, { yo: "yo" });
 });
 

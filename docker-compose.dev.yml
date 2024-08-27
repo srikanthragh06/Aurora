@@ -1,0 +1,28 @@
+services:
+    backend:
+        build:
+            context: ./backend
+            target: dev
+        ports:
+            - "5000:5000"
+        environment:
+            - NODE_ENV=development
+        volumes:
+            - ./backend:/home/aurora/backend
+        env_file:
+            - .backendDevEnv
+
+    frontend:
+        build:
+            context: ./frontend
+            target: dev
+        ports:
+            - "3000:3000"
+        depends_on:
+            - backend
+        volumes:
+            - ./frontend:/home/aurora/frontend
+        environment:
+            - NODE_ENV=development
+        env_file:
+            - .frontendDevEnv

@@ -1,0 +1,13 @@
+# ignore npm packages
+node_modules
+
+# ignore log files
+logs
+
+# ignore any sort of .env file
+.*env
+.*Env
+
+# ignore build directories
+build
+dist
