@@ -1,9 +1,11 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import { consoleLogBlue } from "./utils/colorConsoleLogging";
 import { sendSuccessResponse } from "./utils/responseTemplates";
 import { globalErrorHandler, urlNotFoundHandler } from "./middlewares/handlers";
 import { consoleRequestLogger } from "./logging/requestLogger";
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 // Load environment variables from a .env file
 dotenv.config();
@@ -19,9 +21,13 @@ if (typeof SERVER_PORT === "undefined")
 // Use the consoleRequestLogger middleware to log incoming requests
 app.use(consoleRequestLogger);
 
-app.get("/", (req: Request, res: Response) => {
-    // throw new Error("heihoaeihf");
-    return sendSuccessResponse(res, undefined, 200, { yo: "yo" });
+app.get("/", async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const ans = await prisma.user.findMany();
+        return sendSuccessResponse(res, undefined, 200, { yo: "yo", ans });
+    } catch (err) {
+        next(err);
+    }
 });
 
 // Use the urlNotFoundHandler middleware to handle 404 errors for undefined routes
