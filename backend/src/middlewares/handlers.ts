@@ -24,5 +24,23 @@ export const globalErrorHandler = (
         consoleLogRed(err.message);
     }
 
-    return sendServerSideError(res);
+    return sendServerSideError(res); // Send server side error
+};
+
+// Handles the error incase the json parsing middleware fails
+export const incorrectJSONFormatHandler = (
+    err: any,
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    // Checks if the error passed is a syntax error with "JSON.parse" included in it
+    // If so reject request else keep moving
+    if (
+        err instanceof SyntaxError &&
+        (err.stack?.includes("JSON.parse") ||
+            err.message.includes("JSON.parse"))
+    )
+        return sendClientSideError(res, "Incorrect JSON body format");
+    else next();
 };

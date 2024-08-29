@@ -1,11 +1,13 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import { consoleLogBlue } from "./utils/colorConsoleLogging";
-import { sendSuccessResponse } from "./utils/responseTemplates";
-import { globalErrorHandler, urlNotFoundHandler } from "./middlewares/handlers";
+import {
+    globalErrorHandler,
+    incorrectJSONFormatHandler,
+    urlNotFoundHandler,
+} from "./middlewares/handlers";
 import { consoleRequestLogger } from "./logging/requestLogger";
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import authRouter from "./routes/auth";
 
 // Load environment variables from a .env file
 dotenv.config();
@@ -18,17 +20,17 @@ const SERVER_PORT = process.env.SERVER_PORT;
 if (typeof SERVER_PORT === "undefined")
     throw new Error("Failed to read server port");
 
+// Parse JSON body
+app.use(express.json());
+
+// Middleware to handle incorrect JSON body
+app.use(incorrectJSONFormatHandler);
+
 // Use the consoleRequestLogger middleware to log incoming requests
 app.use(consoleRequestLogger);
 
-app.get("/", async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const ans = await prisma.user.findMany();
-        return sendSuccessResponse(res, undefined, 200, { yo: "yo", ans });
-    } catch (err) {
-        next(err);
-    }
-});
+// Handles urls related to Authentication and Authorization
+app.use("/api/auth", authRouter);
 
 // Use the urlNotFoundHandler middleware to handle 404 errors for undefined routes
 app.use(urlNotFoundHandler);
