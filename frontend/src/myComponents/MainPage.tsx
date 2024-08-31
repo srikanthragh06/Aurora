@@ -14,7 +14,7 @@ const MainPage = ({ children, className = "" }: MainPageProps) => {
                         overflow-x-hidden
                         ${className}`} // Apply the custom className along with default styles
         >
-            {children} // Render children inside the div
+            {children}
         </div>
     );
 };
