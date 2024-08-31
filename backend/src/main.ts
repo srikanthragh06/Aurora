@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 import { consoleLogBlue } from "./utils/colorConsoleLogging";
 import {
@@ -22,6 +23,13 @@ if (typeof SERVER_PORT === "undefined")
 
 // Parse JSON body
 app.use(express.json());
+
+// cors middleware
+app.use(
+    cors({
+        origin: ["http://localhost:3000"],
+    })
+);
 
 // Middleware to handle incorrect JSON body
 app.use(incorrectJSONFormatHandler);
